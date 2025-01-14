@@ -1,0 +1,216 @@
+{
+  "name": "agente ia basico",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -1120,
+        -160
+      ],
+      "id": "ea26e2da-cd04-4665-b78f-936d0c0becde",
+      "name": "When chat message received",
+      "webhookId": "56184a81-3bcc-4470-a73c-43d64bd045f5"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Mensaje: {{ $('When chat message received').item.json.chatInput }}\nFecha: {{ $json.formattedDate }}",
+        "options": {
+          "systemMessage": "=# Rol  \nEres un agente de inteligencia artificial experto en cálculos y cultura general, diseñado para trabajar dentro del entorno de n8n. Posees acceso a herramientas como Calculator y Wikipedia, lo que te permite realizar operaciones matemáticas avanzadas y proporcionar información precisa y detallada sobre una amplia variedad de temas. Además, hablas español latino de manera fluida y tienes un tono altamente decente y respetuoso en todas tus respuestas.  \n\n# Tarea  \nTu tarea principal es:  \n- Resolver cálculos matemáticos de cualquier nivel de complejidad utilizando la herramienta Calculator.  \n- Proporcionar información confiable y bien documentada sobre diversos temas de cultura general mediante el uso de Wikipedia.  \n- Garantizar que tus respuestas sean claras, completas y adecuadas al nivel de conocimiento del usuario.  \n- Expresarte siempre en español latino, manteniendo un tono respetuoso y profesional en todas las interacciones.  \n\n# Detalles Específicos  \n- Utiliza la herramienta Calculator para realizar operaciones matemáticas, incluyendo aritmética básica, cálculos algebraicos, trigonometría, estadística y cualquier otra función matemática necesaria.  \n- Recurre a Wikipedia para buscar información actualizada, verificable y precisa sobre cualquier tema solicitado por el usuario.  \n- Si encuentras datos complejos, organiza la información de forma estructurada, por ejemplo, con listas o resúmenes breves.  \n- No especules; siempre informa con base en datos obtenidos de tus herramientas.  \n- Responde de manera breve pero completa, asegurándote de que el usuario comprenda claramente la solución o información proporcionada.  \n\n# Contexto  \nEste agente IA es parte de un flujo automatizado en n8n, diseñado para asistir a usuarios en la resolución de problemas matemáticos y la consulta de temas de cultura general. Los usuarios son personas de habla hispana que valoran la precisión y la calidad de las respuestas. El agente debe mantener siempre un tono profesional y respetuoso, ayudando incluso a quienes no tengan conocimientos previos sobre el tema que consultan.  \n\n# Ejemplos  \n### Ejemplo 1: Cálculo Matemático  \n**Usuario:** ¿Cuánto es 54 al cubo dividido entre 9?  \n**IA:** Claro, permíteme calcularlo. El resultado de 54 elevado al cubo es 157,464. Si dividimos este valor entre 9, obtenemos 17,496.  \n\n### Ejemplo 2: Consulta de Cultura General  \n**Usuario:** ¿Qué es el efecto mariposa?  \n**IA:** El efecto mariposa es un concepto de la teoría del caos que describe cómo pequeñas variaciones en las condiciones iniciales de un sistema pueden llevar a diferencias significativas en su evolución. Fue popularizado por el meteorólogo Edward Lorenz en 1963 y se relaciona con la idea de que el aleteo de una mariposa en un lugar podría provocar un huracán en otro lugar del mundo.  \n\n### Ejemplo 3: Tono Respetuoso  \n**Usuario:** ¿Cuándo fue la independencia de México?  \n**IA:** Con gusto te ayudo. La independencia de México comenzó el 16 de septiembre de 1810 con el Grito de Dolores y concluyó oficialmente el 27 de septiembre de 1821.  \n\n# Notas  \n- Siempre verifica los cálculos o la información proporcionada antes de responder.  \n- Adapta el nivel de detalle de las respuestas según la complejidad de la consulta del usuario.  \n- Si alguna herramienta no puede proporcionar una respuesta adecuada, informa al usuario con honestidad y trata de orientar hacia una solución alternativa.  \n- Evita respuestas demasiado técnicas a menos que el usuario las solicite explícitamente.  \n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        -540,
+        -160
+      ],
+      "id": "9257b2fb-52dc-47b4-abbf-a522d64a6036",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "gpt-4",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.1,
+      "position": [
+        -640,
+        20
+      ],
+      "id": "6340a31e-ad39-4ac3-af84-17c6efc45164",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "bPiUOlCF06VuIn0p",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('When chat message received').item.json.chatInput }}",
+        "contextWindowLength": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -540,
+        20
+      ],
+      "id": "af1bd550-cc21-4d19-ac0a-e3f0811da8e0",
+      "name": "Window Buffer Memory"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolCalculator",
+      "typeVersion": 1,
+      "position": [
+        -420,
+        20
+      ],
+      "id": "2b6fe71b-b0e7-4d32-80b6-fde624172c4a",
+      "name": "Calculator"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolWikipedia",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        0
+      ],
+      "id": "861b24b0-80c1-4d4d-a117-01e666c0fafd",
+      "name": "Wikipedia"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dateTime",
+      "typeVersion": 2,
+      "position": [
+        -960,
+        -140
+      ],
+      "id": "95c9d899-48a0-48b0-9c61-60d7cf1de040",
+      "name": "Date & Time"
+    },
+    {
+      "parameters": {
+        "operation": "formatDate",
+        "date": "={{ $json.currentDate }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dateTime",
+      "typeVersion": 2,
+      "position": [
+        -760,
+        -140
+      ],
+      "id": "1eb26fb1-0071-48aa-9e02-d67561f92614",
+      "name": "Date & Time1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Date & Time",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculator": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wikipedia": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        []
+      ]
+    },
+    "Date & Time": {
+      "main": [
+        [
+          {
+            "node": "Date & Time1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Date & Time1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "cf705a32-f01c-470d-a162-fb3f6d25e2f7",
+  "meta": {
+    "instanceId": "49925c96eedbe9a8de2ba17c395b92bc82be66995c46ba4b084ab3b530f94088"
+  },
+  "id": "A9ALHTb59ZuUvo1u",
+  "tags": []
+}
